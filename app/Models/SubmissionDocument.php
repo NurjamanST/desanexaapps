@@ -18,4 +18,5 @@ class SubmissionDocument extends Model
     {
         return $this->belongsTo(Document_type::class, 'id_doctype', 'id');
     }
+    
 }

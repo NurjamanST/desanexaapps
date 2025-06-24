@@ -81,7 +81,7 @@
                 <div class="bg-[#f8fff2] dark:bg-[#00141d] relative lg:-ms-px -mb-px lg:mb-0 rounded-t-lg lg:rounded-t-none lg:rounded-e-lg! aspect-[335/376] lg:aspect-auto w-full lg:w-[438px] shrink-0 overflow-hidden">
                     {{-- Laravel Logo --}}
                     <div class="absolute inset-0 flex items-center justify-center">
-                        <img src="{{ asset('images/DNA-Logo.png') }}" alt="Laravel Logo" class="w-20 h-20 lg:w-24 lg:h-24">
+                        <img src="{{ url('images/DNA-Logo.png') }}" alt="Laravel Logo" class="w-20 h-20 lg:w-24 lg:h-24">
                     </div>
                     {{-- Decorative Background --}}
                     <div class="absolute inset-0 rounded-t-lg lg:rounded-t-none lg:rounded-e-lg shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]"></div>

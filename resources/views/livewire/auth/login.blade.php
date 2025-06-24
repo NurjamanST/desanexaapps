@@ -45,7 +45,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
         if (auth()->user()->role === UserRole::Adminapps) {
             return redirect()->route("adminapps.dashboard")->with("success", "successfully...");
         }elseif (auth()->user()->role === UserRole::Kepdesa) {
-            return redirect()->route("kades.dashboard")->with("success", "successfully...");
+            return redirect()->route("kepdesa.dashboard")->with("success", "successfully...");
         }elseif (auth()->user()->role === UserRole::Staffdesa) {
             return redirect()->route("staffdesa.dashboard")->with("success", "successfully...");
         }

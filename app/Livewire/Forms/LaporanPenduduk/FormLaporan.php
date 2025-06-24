@@ -26,7 +26,7 @@ class FormLaporan extends Form
 
         // 💾 Simpan file jika ada
         if ($this->bukti_laporan) {
-            $validatedData['bukti_laporan'] = $this->bukti_laporan->store('file/laporan', 'public');
+            $validatedData['bukti_laporan'] = $this->bukti_laporan->store('file/laporan', 'public'); // ubah supaya d
         }
 
         // Ambil ID user yang login

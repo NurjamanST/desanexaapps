@@ -73,6 +73,21 @@ Route::middleware(['auth', 'verified', 'adminapps'])
             ->name('adminapps.laporan.read');
     });
 
+// Kades Routes
+Route::middleware(['auth', 'verified', 'kepdesa'])
+    ->prefix('kepdesa')
+    ->group(function () {
+        // Dashboard
+        Route::get('/dashboard', [DashboardStaffDesa::class, 'index'])
+            ->name('kepdesa.dashboard');
+        // Pengajuan
+        Route::get('/pengajuandokumen/read', PengajuanDokumenRead::class)
+            ->name('kepdesa.pengajuandokumen.read');
+        // Laporan Penduduk
+        Route::get('/laporanpenduduk', LaporanPenduduk::class)
+            ->name('kepdesa.laporanpenduduk');
+    });
+
 // Staff Desa Routes
 Route::middleware(['auth', 'verified', 'staffdesa'])
     ->prefix('staffdesa')
@@ -83,25 +98,9 @@ Route::middleware(['auth', 'verified', 'staffdesa'])
         // Pengajuan
         Route::get('/pengajuandokumen/read', PengajuanDokumenRead::class)
             ->name('staffdesa.pengajuandokumen.read');
-        // laporan Penduduk
-        // RRoute::get('/laporan_penduduk/read', UsersRead::class)
-        //     ->name('kades.laporan_penduduk.read');
-
-    });
-
-// Kades Routes
-Route::middleware(['auth', 'verified', 'kepdesa'])
-    ->prefix('kades')
-    ->group(function () {
-        // Dashboard
-        Route::get('/dashboard', [DashboardDesa::class, 'index'])
-            ->name('kades.dashboard');
-        // Pengajuan
-        Route::get('/pengajuandokumen/read', PengajuanDokumenRead::class)
-            ->name('kades.pengajuandokumen.read');
-        // laporan Penduduk
-        // RRoute::get('/laporan_penduduk/read', UsersRead::class)
-        //     ->name('kades.laporan_penduduk.read');
+        // Laporan Penduduk
+        Route::get('/laporanpenduduk', LaporanPenduduk::class)
+            ->name('staffdesa.laporanpenduduk');
 
     });
 
@@ -118,17 +117,19 @@ Route::middleware(['auth', 'verified', 'penduduk'])
         // Upload Persyaratan
             Route::get('/uploadpersyaratan', SubReqRead::class)
         ->name('penduduk.uploadpersyaratan');
-
         // Laporan Penduduk
         Route::get('/laporanpenduduk', LaporanPenduduk::class)
             ->name('penduduk.laporanpenduduk');
     });
 
+
+    
+
+// Kelola Users Routes
 Route::middleware(['auth', 'adminapps'])->group(function () {
     Route::redirect('kelolausers', 'settings/profile');
 });
-
-
+// Settings Routes
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
 

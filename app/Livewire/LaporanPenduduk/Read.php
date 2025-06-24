@@ -19,6 +19,8 @@ class Read extends Component
                 $this->id_penduduk = $value->id_penduduk;
             }
             $this->LaporanPenduduk = LaporanPenduduk::where('id_penduduk', $this->id_penduduk)->get();
+        }elseif (auth()->user()->role === UserRole::Kepdesa || auth()->user()->role === UserRole::Staffdesa) {
+            $this->LaporanPenduduk = LaporanPenduduk::all();
         }
         return view('livewire.laporan-penduduk.read',[
             'LaporanPenduduk' => $this->LaporanPenduduk,

@@ -11,7 +11,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        
+
         // Ambil data desa milik user login
         $ProfileDesa = Desa::where('id_users', Auth::id())->first();
         // Hitung statistik
@@ -24,7 +24,7 @@ class DashboardController extends Controller
         $dokumenSelesai = 20; // Ganti dengan logika yang sesuai
 
         // Kirim ke view
-        return view('kades.dashboard', compact(
+        return view('kepdesa.dashboard', compact(
             'ProfileDesa',
             'totalPenduduk',
             'dokumenPending',

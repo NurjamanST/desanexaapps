@@ -10,22 +10,35 @@
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
         {{-- breadcrumbs --}}
         <flux:breadcrumbs>
-            <flux:breadcrumbs.item :href="route('penduduk.dashboard')">Dasbor</flux:breadcrumbs.item>
-            <flux:breadcrumbs.item :href="route('penduduk.laporanpenduduk')">Laporan Penduduk</flux:breadcrumbs.item>
+            @if (auth()->user()->role === App\Enums\UserRole::Kepdesa)
+                <flux:breadcrumbs.item :href="route('kepdesa.dashboard')">Dasbor</flux:breadcrumbs.item>
+                <flux:breadcrumbs.item :href="route('kepdesa.laporanpenduduk')">Laporan Penduduk</flux:breadcrumbs.item>
+            @endif
+            @if (auth()->user()->role === App\Enums\UserRole::Staffdesa)
+                <flux:breadcrumbs.item :href="route('staffdesa.dashboard')">Dasbor</flux:breadcrumbs.item>
+                <flux:breadcrumbs.item :href="route('staffdesa.laporanpenduduk')">Laporan Penduduk</flux:breadcrumbs.item>
+            @endif
+            @if (auth()->user()->role === App\Enums\UserRole::Penduduk)
+                <flux:breadcrumbs.item :href="route('penduduk.dashboard')">Dasbor</flux:breadcrumbs.item>
+                <flux:breadcrumbs.item :href="route('penduduk.laporanpenduduk')">Laporan Penduduk</flux:breadcrumbs.item>
+            @endif
+
         </flux:breadcrumbs>
         {{-- End breadcrumbs --}}
 
         {{-- Content --}}
         <div>
-            {{-- Tombol Create Document Type --}}
-            <flux:modal.trigger name="add_laporan-penduduk">
-                    <flux:button class=" bg-green-700! hover:bg-green-600! transition! text-white!" size="sm">
-                        <flux:icon.document-plus variant="outline" class="size-5" />
-                        Upload Laporan Penduduk
-                    </flux:button>
-            </flux:modal.trigger>
+            @if (auth()->user()->role === App\Enums\UserRole::Penduduk)
+                {{-- Tombol Create Document Type --}}
+                <flux:modal.trigger name="add_laporan-penduduk">
+                        <flux:button class=" bg-green-700! hover:bg-green-600! transition! text-white!" size="sm">
+                            <flux:icon.document-plus variant="outline" class="size-5" />
+                            Upload Laporan Penduduk
+                        </flux:button>
+                </flux:modal.trigger>
 
-            <livewire:laporan-penduduk.create />
+                <livewire:laporan-penduduk.create />
+            @endif
 
             <div class="overflow-x-auto my-5">
                 @if (session()->has('success'))

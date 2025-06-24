@@ -8,7 +8,7 @@
 
     {{-- Breadcrumbs --}}
     <flux:breadcrumbs>
-        <flux:breadcrumbs.item href="{{ route('kades.dashboard') }}">Dasbor</flux:breadcrumbs.item>
+        <flux:breadcrumbs.item href="{{ route('penduduk.dashboard') }}">Dasbor</flux:breadcrumbs.item>
         <flux:breadcrumbs.item is-current>Penduduk</flux:breadcrumbs.item>
     </flux:breadcrumbs>
     {{-- Session Success Alert --}}
@@ -69,7 +69,7 @@
     </div>
 
     <flux:heading size="xl" class="my-6">Jenis Dokumen</flux:heading>
-    
+
     <div id="accordion-color" data-accordion="collapse" data-active-classes="bg-blue-100 dark:bg-gray-800 text-blue-600 dark:text-white">
         @forelse ($DocumenType as $doctype)
             <h2 id="accordion-color-heading-{{ $doctype->id }}">

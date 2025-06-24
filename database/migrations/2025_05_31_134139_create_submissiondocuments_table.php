@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('submissiondocuments', function (Blueprint $table) {
             // Primary Key
             $table->id('id_subdoc'); // Kolom id otomatis dibuat sebagai primary key
-            
+
             // Tanggal Pengajuan
             $table->dateTime('tanggal_pengajuan')->nullable();
-            
+
             // Foreign Keys
             $table->unsignedBigInteger('id_doctype');
             $table->foreign('id_doctype')->references('id')->on('document_types')
@@ -34,6 +34,7 @@ return new class extends Migration
                 'Proses Pengajuan',
                 'Reject Staff Desa',
                 'Diverifikasi Staff Desa',
+                'Ditinjau Kepdes',
                 'Accept Kepdes',
                 'Reject Kepdes'
             ])->default('Proses Pengajuan'); // Status default
@@ -41,7 +42,7 @@ return new class extends Migration
             $table->string('file_dokumen')->nullable(); // Path atau URL file dokumen
             $table->boolean('status_unduh')->default(false); // Ya/Tidak (false = tidak, true = ya)
             $table->text('catatan')->nullable(); // Catatan tambahan
-       
+
             // Timestamps (opsional)
             $table->timestamps();
         });

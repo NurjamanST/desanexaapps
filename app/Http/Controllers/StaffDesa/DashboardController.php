@@ -7,18 +7,21 @@ use App\Models\Penduduk;
 use App\Models\Document_type;
 use App\Models\SubmissionDocument;
 use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // $this->id_login = auth()->user()->id;
-        // $this->penduduk = Penduduk::where('id_users', $this->id_login)->get('id_penduduk');
-        // foreach ($this->penduduk as $value) {
-        //     $this->id_penduduk = $value->id_penduduk;
-        // }
 
         // Ambil Data Statistika dari SubmissionDocument
+        $ProfileDesa = Desa::where('id_users', Auth::id())->first();
+        // Hitung statistik
+        $totalPenduduk = User::where('role', 'penduduk')->count();
+        // Hitung Demografi Penduduk | Penambahan berdsarkan Pengajuan Dokumen == Surat Kelahiran
+
+        // Status Pengajuan Dokumen
         $ProsesPengajuan = SubmissionDocument::where('status_pengajuan', '=', 'Proses Pengajuan')->count();
         $RejectStaffDesa = SubmissionDocument::where('status_pengajuan', 'Reject Staff Desa')->count();
         $DiverifikasiStaffDesa = SubmissionDocument::where('status_pengajuan', 'Diverifikasi Staff Desa')->count();
@@ -30,6 +33,8 @@ class DashboardController extends Controller
 
         // Kirim ke view
         return view('staffdesa.dashboard', compact(
+            'ProfileDesa',
+            'totalPenduduk',
             'ProsesPengajuan',
             'RejectStaffDesa',
             'DiverifikasiStaffDesa',

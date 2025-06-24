@@ -58,6 +58,19 @@
                             {{ session('danger') }}
                         </div>
                     @endif
+                    @if (session()->has('message'))
+                        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
+                            class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded shadow-lg z-50 transition-opacity duration-300">
+                            {{ session('message') }}
+                        </div>
+                    @endif
+
+                    @if (session()->has('error'))
+                        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
+                            class="fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded shadow-lg z-50 transition-opacity duration-300">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                 {{-- End Alert  --}}
 
                 {{-- Card Pengajuan --}}
@@ -88,6 +101,11 @@
                                             <flux:icon.viewfinder-circle />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             <div><span class="font-medium">{{ "Diverifikasi Staff Desa" }}</span></div>
                                         </div>
+                                    @elseif ($subdoc->status_pengajuan === "Ditinjau Kepdes")
+                                        <div class="flex items-center p-2 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
+                                            <flux:icon.viewfinder-circle />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <div><span class="font-medium">{{ "Ditinjau Kepala Desa" }}</span></div>
+                                        </div>
                                     @elseif ($subdoc->status_pengajuan === "Accept Kepdes")
                                         <div class="flex items-center p-2 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
                                             <flux:icon.document-check />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -108,53 +126,52 @@
                             @endphp
                             {{-- Cek ketersediaan file --}}
                             @if ($filePath)
-                                {{-- Cek siapa yang akses --}}
-                                {{-- Jika Penduduk --}}
-                                @if (auth()->user()->role === App\Enums\UserRole::Penduduk)
-                                    @if ($subdoc->status_pengajuan === "Accept Kepdes" && $subdoc->status_unduh == 1)
-                                        {{-- Jika status unduh 1 --}}
-                                        <div class="my-3">
-                                            <a href="{{ asset($filePath) }}" class="inline-flex items-center px-3 py-1 bg-indigo-500 hover:bg-indigo-600 text-white rounded-md text-sm font-medium transition duration-200">
+                                @php
+                                    $isPenduduk = auth()->user()->role === App\Enums\UserRole::Penduduk;
+                                    $isStaffDesa = auth()->user()->role === App\Enums\UserRole::Staffdesa || auth()->user()->role === App\Enums\UserRole::Kepdesa;
+
+                                    $canDownload = false;
+
+                                    if ($isPenduduk && $subdoc->status_unduh == 1 && $subdoc->status_pengajuan === "Accept Kepdes") {
+                                        $canDownload = true;
+                                    } elseif ($isStaffDesa) {
+                                        $canDownload = true; // Staff/Kepdes boleh download meskipun status_unduh = 0
+                                    }
+                                @endphp
+
+                                {{-- Tombol Download (hanya muncul jika diizinkan) --}}
+                                @if ($canDownload)
+                                    <div class="my-3">
+                                        {{-- Tombol Preview PDF --}}
+                                        <a href="{{ asset($filePath) }}" target="_blank" class="inline-flex items-center px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-sm font-medium transition duration-200 mr-2">
+                                            <flux:icon.eye class="w-4 h-4 mr-2" />
+                                            Lihat Dokumen
+                                        </a>
+
+                                        {{-- Tombol Unduh hanya untuk Penduduk jika status_unduh == 1 --}}
+                                        @if (auth()->user()->role === App\Enums\UserRole::Penduduk && $subdoc->status_unduh == 1)
+                                            <a href="{{ asset($filePath) }}" download class="inline-flex items-center px-3 py-1 bg-indigo-500 hover:bg-indigo-600 text-white rounded-md text-sm font-medium transition duration-200">
                                                 <flux:icon.folder-arrow-down class="w-4 h-4 mr-2" />
                                                 Unduh Dokumen
                                             </a>
-                                            <span class="text-xs text-gray-500">({{ strtoupper(pathinfo($fileName, PATHINFO_EXTENSION)) }})</span>
-                                        </div>
-                                    @elseif ($subdoc->status_pengajuan === "Accept Kepdes" && $subdoc->status_unduh == 0)
-                                        {{-- Jika status unduh 0 --}}
-                                        <div class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800" role="alert">
-                                            <flux:icon.information-circle class="w-4 h-4 mr-2"/>&nbsp;&nbsp;&nbsp;
-                                            <div><span class="font-medium text-xs">Silakan ambil dokumen ke Kantor Desa . . .</span></div>
-                                        </div>
-                                    @else
-                                        {{-- Status Pengajuan selain Accept Kepdes --}}
+                                        @endif
+
+                                        {{-- Format file --}}
+                                        <span class="text-xs text-gray-500 ml-2">({{ strtoupper(pathinfo($fileName, PATHINFO_EXTENSION)) }})</span>
+                                    </div>
+                                @endif
+
+                                {{-- Pesan khusus untuk penduduk jika tidak bisa download --}}
+                                @if ($isPenduduk && !$canDownload)
+                                    @if ($subdoc->status_pengajuan !== "Accept Kepdes")
                                         <div class="flex items-center p-4 mb-4 text-sm text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400 dark:border-yellow-800" role="alert">
                                             <flux:icon.information-circle class="w-4 h-4 mr-2"/>&nbsp;&nbsp;&nbsp;
                                             <div><span class="font-medium text-xs">Dokumen menunggu ACC Kepala Desa</span></div>
                                         </div>
-                                    @endif
-                                {{-- Jika selain penduduk --}}
-                                @elseif (auth()->user()->role === App\Enums\UserRole::Kepdesa || auth()->user()->role === App\Enums\UserRole::Staffdesa)
-                                    @if ($subdoc->status_pengajuan === "Accept Kepdes" && $subdoc->status_unduh == 1)
-                                        {{-- Jika status unduh 1 --}}
-                                        <div class="my-3">
-                                            <a href="{{ asset($filePath) }}" class="inline-flex items-center px-3 py-1 bg-indigo-500 hover:bg-indigo-600 text-white rounded-md text-sm font-medium transition duration-200">
-                                                <flux:icon.folder-arrow-down class="w-4 h-4 mr-2" />
-                                                Unduh Dokumen
-                                            </a>
-                                            <span class="text-xs text-gray-500">({{ strtoupper(pathinfo($fileName, PATHINFO_EXTENSION)) }})</span>
-                                        </div>
-                                    @elseif ($subdoc->status_pengajuan === "Accept Kepdes" && $subdoc->status_unduh == 0)
-                                        {{-- Jika status unduh 0 --}}
+                                    @else
                                         <div class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800" role="alert">
                                             <flux:icon.information-circle class="w-4 h-4 mr-2"/>&nbsp;&nbsp;&nbsp;
                                             <div><span class="font-medium text-xs">Silakan ambil dokumen ke Kantor Desa . . .</span></div>
-                                        </div>
-                                    @else
-                                        {{-- Status Pengajuan selain Accept Kepdes --}}
-                                        <div class="flex items-center p-4 mb-4 text-sm text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400 dark:border-yellow-800" role="alert">
-                                            <flux:icon.information-circle class="w-4 h-4 mr-2"/>&nbsp;&nbsp;&nbsp;
-                                            <div><span class="font-medium text-xs">Dokumen menunggu ACC Kepala Desa</span></div>
                                         </div>
                                     @endif
                                 @endif
@@ -182,6 +199,24 @@
                                             </flux:tooltip>
                                         @endif
                                     @endif
+                                    {{-- Role Staff Desa --}}
+                                    @if (auth()->user()->role === App\Enums\UserRole::Staffdesa)
+                                        @if ($subdoc->status_pengajuan == "Diverifikasi Staff Desa")
+                                            {{-- Upload File Dokumen --}}
+                                            <flux:tooltip content="Upload File Dokumen">
+                                                <flux:button icon="document-arrow-up" icon:variant="outline" wire:click="uploadFile({{ $subdoc->id_subdoc }})" size="sm" class="text-xs"/>
+                                            </flux:tooltip>
+                                        @endif
+                                    @endif
+                                    {{-- Role Kepala Desa --}}
+                                    @if (auth()->user()->role === App\Enums\UserRole::Kepdesa)
+                                        @if ($subdoc->status_pengajuan == "Ditinjau Kepdes")
+                                            {{-- Accept Pengajuan --}}
+                                            <flux:tooltip content="Accept Pengajuan">
+                                                <flux:button icon="check-circle" icon:variant="outline" wire:click="acceptSubdoc({{ $subdoc->id_subdoc }})" size="sm" class="text-xs"/>
+                                            </flux:tooltip>
+                                        @endif
+                                    @endif
                                 </flux:button.group>
                             </div>
                             {{-- Catatan --}}
@@ -203,6 +238,7 @@
                             {{-- Tampilkan Tabel data persyaratan--}}
                             <div class="overflow-x-auto">
                                 {{-- Tabel Persyaratan yang perlu di upload --}}
+                                <h3 class="my-6">Persyaratan yang perlu di upload</h3>
                                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                     <thead class="bg-gray-50 dark:bg-gray-700">
                                         <tr>
@@ -233,7 +269,9 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+                                <hr class="my-6 border-gray-200 dark:border-gray-700">
                                 {{-- Tabel Persyaratan yang diupload Penduduk --}}
+                                <h3 class="my-6">Persyaratan yang diupload Penduduk</h3>
                                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                     <thead class="bg-gray-50 dark:bg-gray-700">
                                         <tr>
@@ -261,10 +299,103 @@
                                     </tbody>
                                 </table>
                             </div>
-                            {{-- Tombol Tutup Modal --}}
-                            <div class="flex justify-end mt-6">
-                                <flux:button wire:click="closeModal" variant="filled" size="sm">Tutup</flux:button>
+                            {{-- Tombol Aksi Modal --}}
+                            <div class="flex justify-end my-6 mx-2 gap-2">
+                                @forelse ($data_subdoc as $subdoc)
+                                    @if (auth()->user()->role === App\Enums\UserRole::Staffdesa && $subdoc->status_pengajuan === "Proses Pengajuan")
+                                        {{-- Verifikasi persyaratan --}}
+                                        <flux:button wire:click="verifySubdoc({{ $subdoc->id_subdoc }})" variant="primary" class="bg-yellow-400" size="sm">Verifikasi</flux:button>
+                                        {{-- Tombol Reject - Tampilkan input catatan jika diklik --}}
+                                        <flux:button wire:click="setRejectId({{ $subdoc->id_subdoc }})" variant="danger" size="sm">Tolak</flux:button>
+                                    @endif
+                                    @if (auth()->user()->role === App\Enums\UserRole::Kepdesa && $subdoc->status_pengajuan === "Diverifikasi Staff Desa")
+                                        {{-- Accept Pengajuan --}}
+                                        <flux:button wire:click="acceptSubdoc({{ $subdoc->id_subdoc }})" variant="primary" size="sm">Terima</flux:button>
+                                        {{-- Reject Pengajuan --}}
+                                        <flux:button wire:click="setRejectKepdesId({{ $subdoc->id_subdoc }})" variant="danger" size="sm">Tolak</flux:button>
+                                    @endif
+                                    {{-- Aksi Ajukan Ulang --}}
+                                    @if (auth()->user()->role === App\Enums\UserRole::Penduduk && $subdoc->status_pengajuan === "Reject Staff Desa")
+                                        <flux:button wire:click="resubmitSubdoc({{ $subdoc->id_subdoc }})" variant="primary" size="sm">Ajukan Ulang</flux:button>
+                                    @endif
+                                    <flux:button wire:click="closeModal" variant="filled" size="sm">Tutup</flux:button>
+                                @empty
+                                    <flux:button wire:click="closeModal" variant="filled" size="sm">Tutup</flux:button>
+                                @endforelse
                             </div>
+                            {{-- Form Input Catatan untuk Reject (hanya muncul saat showRejectForm == true) --}}
+                            @if ($showRejectForm && $rejectIdSubdoc)
+                                <div class="my-4 mx-2">
+                                    <flux:input label="Catatan Penolakan" wire:model="catatan_penolakan" placeholder="Masukkan alasan penolakan..." />
+
+                                    <div class="flex justify-end gap-2 mt-3">
+                                        <flux:button wire:click="rejectSubdoc" variant="danger" size="sm">Kirim Penolakan</flux:button>
+                                        <flux:button wire:click="$set('showRejectForm', false)" variant="outline" size="sm">Batal</flux:button>
+                                    </div>
+                                </div>
+                            @endif
+                            @if ($showRejectForm && $rejectKepdesIdSubdoc)
+                                <div class="my-4 mx-2">
+                                    <flux:input label="Catatan Penolakan" wire:model="catatan_penolakan" placeholder="Masukkan alasan penolakan..." />
+
+                                    <div class="flex justify-end gap-2 mt-3">
+                                        <flux:button wire:click="rejectKepdesSubdoc" variant="danger" size="sm">Kirim Penolakan</flux:button>
+                                        <flux:button wire:click="$set('showRejectForm', false)" variant="outline" size="sm">Batal</flux:button>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Modal Upload File Dokumen ke data tertentu berdasarkan ID --}}
+                @if ($uploading && $uploadIdSubdoc)
+                    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-lg">
+
+                            <h2 class="text-lg font-semibold mb-4">Upload File Dokumen</h2>
+
+                            @if ($this->isLoading)
+                                <flux:icon.loading />
+                                <span class="ml-2 text-gray-600 dark:text-gray-300">Mengunggah File...</span>
+                            @else
+                                <flux:input type="file" wire:model="file_dokumen" label="Pilih File Dokumen" accept=".pdf,.doc,.docx" />
+                                {{-- @error('file_dokumen') <span class="text-red-500">{{ $message }}</span> @enderror --}}
+
+                                <div class="flex justify-end space-x-2 mt-4">
+                                    <flux:button wire:click="uploadFileDokumen" variant="primary" size="sm">Unggah</flux:button>
+                                    <flux:button wire:click="closeModal" variant="filled" size="sm">Tutup</flux:button>
+                                </div>
+                            @endif
+
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Modal Konfirmasi Accepted --}}
+                @if ($accepting && $acceptIdSubdoc)
+                    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-lg">
+                            <h2 class="text-lg font-semibold mb-4">Terima Pengajuan?</h2>
+
+                            <p class="mb-4 text-gray-700 dark:text-gray-300">
+                                Apakah Anda yakin ingin menerima Pengajuan berikut? <br>
+                                <strong>Tindakan ini tidak bisa dibatalkan.</strong>
+                            </p>
+
+                            <div class="font-medium text-green-600 dark:text-green-400 mb-4">
+                                {{ $acceptName }}
+                            </div>
+
+                            @if ($this->isLoading)
+                                <flux:icon.loading />
+                                <span class="ml-2 text-gray-600 dark:text-gray-300">Menerima Pengajuan...</span>
+                            @else
+                                <div class="flex justify-end space-x-2">
+                                    <flux:button wire:click="accept" variant="primary" size="sm">Ya, Terima</flux:button>
+                                    <flux:button wire:click="closeModal" variant="filled" size="sm">Batal</flux:button>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 @endif

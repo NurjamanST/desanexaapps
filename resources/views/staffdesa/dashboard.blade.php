@@ -24,6 +24,54 @@
         </flux:callout>
     @endsession
 
+    @if (auth()->user()->role === App\Enums\UserRole::Kepdesa)
+        {{-- Informasi Desa --}}
+        @if ($ProfileDesa)
+            {{-- Logo Desa --}}
+            <a href="#" class="flex flex-col my-5 items-center bg-white border border-gray-200 rounded-lg shadow-sm md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+                @if ($ProfileDesa->logo_desa)
+                    {{-- Logo Desa --}}
+                    <img class="object-cover w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg bg-white" src="{{ asset($ProfileDesa->logo_desa) }}" alt="">
+                @else
+                    <span class="text-gray-500">Tidak ada logo</span>
+                @endif
+                <div class="flex flex-col justify-between p-4 leading-normal">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $ProfileDesa->nama_lurah_desa }}</h5>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                        Kepala Desa     : {{ $ProfileDesa->nama_kepdes }} | Sekretaris Desa : {{ $ProfileDesa->nama_sekdes }}
+                    </p>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                        {{ $ProfileDesa->kecamatan }}
+                        {{ $ProfileDesa->kota_kabupaten }}
+                        {{ $ProfileDesa->provinsi }}
+                    </p>
+                </div>
+            </a>
+        @else
+            <flux:callout icon="information-circle" variant="info" class="mt-6">
+                Anda belum memiliki data desa. Silakan tambahkan dulu.
+            </flux:callout>
+        @endif
+    @else
+        
+    @endif
+
+    {{-- Demografi Penduduk --}}
+    <flux:heading size="xl" class="my-6">Demografi Penduduk</flux:heading>
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mt-6">
+        {{-- Grafik Penambahan dan Pengurangan Penduduk --}}
+        <div class="bg-white text-blue-500 p-6 rounded-sm shadow-lg text-center flex-1 min-w-[200px]">
+            <h2 class="text-lg font-bold">Grafik Penduduk</h2>
+            <div class="mt-4">
+                Coming Soon...
+                {{-- <canvas id="pendudukChart" class="w-full h-64"></canvas> --}}
+            </div>
+        </div>
+        
+        
+        {{-- End Grafik --}}
+    </div>
+    {{-- Statistik Pengajuan Dokumen --}}
     <flux:heading size="xl" class="my-6">Statistik Pengajuan Dokumen</flux:heading>
 
     <div class="grid grid-cols-1 md:grid-cols-5 gap-2 mt-6">

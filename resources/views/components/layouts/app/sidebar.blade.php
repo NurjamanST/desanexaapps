@@ -41,11 +41,11 @@
                         {{-- Label Menu Kepala Desa  --}}
                         <flux:navlist.item wire:navigate>{{ __('Menu Kepala Desa') }}</flux:navlist.item>
                             {{-- Dashboard Kades --}}
-                            <flux:navlist.item icon="square-3-stack-3d" :href="route('kades.dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+                            <flux:navlist.item icon="square-3-stack-3d" :href="route('kepdesa.dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                             {{-- Pengajuan Dokumen Perlu ACC--}}
-                            <flux:navlist.item icon="document-arrow-down" :href="route('kades.pengajuan_penduduk.read')" wire:navigate>{{ __('Pengajuan Dokumen') }}</flux:navlist.item>
+                            <flux:navlist.item icon="document-arrow-down" :href="route('kepdesa.pengajuandokumen.read')" wire:navigate>{{ __('Pengajuan Dokumen') }}</flux:navlist.item>
                             {{-- Laporan Penduduk --}}
-                            <flux:navlist.item icon="chat-bubble-left-right" :href="route('kades.pengajuan_penduduk.read')" wire:navigate>{{ __('Laporan Penduduk') }}</flux:navlist.item>                    @endif
+                            <flux:navlist.item icon="chat-bubble-left-right" :href="route('kepdesa.laporanpenduduk')" wire:navigate>{{ __('Laporan Penduduk') }}</flux:navlist.item>                    @endif
                     {{-- Staff Desa --}}
                     @if (auth()->user()->role === App\Enums\UserRole::Staffdesa)
                         {{-- label Menu Staff Desa--}}
@@ -57,7 +57,7 @@
                             {{-- Pengajuan Dokumen --}}
                             <flux:navlist.item icon="folder" :href="route('staffdesa.pengajuandokumen.read')" wire:navigate>{{ __('Pengajuan Dokumen') }}</flux:navlist.item>
                             {{-- Laporan Penduduk --}}
-                            <flux:navlist.item icon="flag" :href="route('staffdesa.pengajuandokumen.read')" wire:navigate>{{ __('Laporan Penduduk') }}</flux:navlist.item>
+                            <flux:navlist.item icon="flag" :href="route('staffdesa.laporanpenduduk')" wire:navigate>{{ __('Laporan Penduduk') }}</flux:navlist.item>
                     @endif
                     {{-- Rukun Warga --}}
                     @if (auth()->user()->role === App\Enums\UserRole::Rukunwarga)
