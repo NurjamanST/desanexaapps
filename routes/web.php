@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\DashboardController as DashboardAdminapps;
 use App\Http\Controllers\Desa\DashboardController as DashboardDesa;
 use App\Http\Controllers\StaffDesa\DashboardController as DashboardStaffDesa;
 use App\Http\Controllers\Penduduk\DashboardController as DashboardPenduduk;
-
+use App\Http\Controllers\Presensi\InvalideController;
 // Document Type
 use App\Livewire\DocumentType\Read;
 // Users
@@ -32,6 +32,9 @@ use App\Livewire\SubmissionRequirement\Read as SubReqRead;
 
 // Laporan Penduduk
 use App\Livewire\LaporanPenduduk\Read as LaporanPenduduk;
+// Invalide
+use App\Livewire\Presensi\Invalide;
+use App\Livewire\Presensi\InvalideCreate;
 
 Route::get('/', function () {
     return view('welcome');
@@ -102,6 +105,9 @@ Route::middleware(['auth', 'verified', 'staffdesa'])
         Route::get('/laporanpenduduk', LaporanPenduduk::class)
             ->name('staffdesa.laporanpenduduk');
 
+        Route::get('/invalide', Invalide::class)->name('staffdesa.invalide');
+        Route::get('/invalide/create/{id}', InvalideCreate::class)->name('staffdesa.invalide.create');
+
     });
 
 // Penduduk Routes
@@ -123,7 +129,6 @@ Route::middleware(['auth', 'verified', 'penduduk'])
     });
 
 
-    
 
 // Kelola Users Routes
 Route::middleware(['auth', 'adminapps'])->group(function () {

@@ -52,8 +52,12 @@
                         <flux:navlist.item wire:navigate>{{ __('Menu Staff Desa') }}</flux:navlist.item>
                             {{-- Dashboard Staff Desa --}}
                             <flux:navlist.item icon="square-3-stack-3d" :href="route('staffdesa.dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
-                            {{-- Presence Aparat Desa --}}
-                            <flux:navlist.item icon="computer-desktop" href="http://kotapintar.my.id/rfid" target="_blank" rel="noopener noreferrer">{{ __('Presence Aparat Desa') }}</flux:navlist.item>
+                            {{-- Presence presensi --}}
+                            <flux:navlist.item icon="check" href="" rel="noopener noreferrer">{{ __('Data Presensi') }}</flux:navlist.item>
+                            {{-- data smd --}}
+                            <flux:navlist.item icon="users" href="" rel="noopener noreferrer">{{ __('Data Staff') }}</flux:navlist.item>
+                            {{-- Data invalide --}}
+                            <flux:navlist.item icon="arrow-left" href="{{route('staffdesa.invalide')}}" rel="noopener noreferrer">{{ __('Data Invalide') }}</flux:navlist.item>
                             {{-- Pengajuan Dokumen --}}
                             <flux:navlist.item icon="folder" :href="route('staffdesa.pengajuandokumen.read')" wire:navigate>{{ __('Pengajuan Dokumen') }}</flux:navlist.item>
                             {{-- Laporan Penduduk --}}
