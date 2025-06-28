@@ -55,7 +55,7 @@
                             {{-- Presence presensi --}}
                             <flux:navlist.item icon="check" href="" rel="noopener noreferrer">{{ __('Data Presensi') }}</flux:navlist.item>
                             {{-- data smd --}}
-                            <flux:navlist.item icon="users" href="" rel="noopener noreferrer">{{ __('Data Staff') }}</flux:navlist.item>
+                            <flux:navlist.item icon="users" href="{{ route('staffdesa.sdm.read') }}" rel="noopener noreferrer">{{ __('Data Card Staff') }}</flux:navlist.item>
                             {{-- Data invalide --}}
                             <flux:navlist.item icon="arrow-left" href="{{route('staffdesa.invalide')}}" rel="noopener noreferrer">{{ __('Data Invalide') }}</flux:navlist.item>
                             {{-- Pengajuan Dokumen --}}

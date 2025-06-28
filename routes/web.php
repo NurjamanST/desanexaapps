@@ -35,6 +35,9 @@ use App\Livewire\LaporanPenduduk\Read as LaporanPenduduk;
 // Invalide
 use App\Livewire\Presensi\Invalide;
 use App\Livewire\Presensi\InvalideCreate;
+use App\Livewire\Sdm\Read as SdmRead;
+use App\Livewire\Sdm\Update;
+use App\Livewire\Sdm\View;
 
 Route::get('/', function () {
     return view('welcome');
@@ -105,8 +108,14 @@ Route::middleware(['auth', 'verified', 'staffdesa'])
         Route::get('/laporanpenduduk', LaporanPenduduk::class)
             ->name('staffdesa.laporanpenduduk');
 
+        // invalide
         Route::get('/invalide', Invalide::class)->name('staffdesa.invalide');
         Route::get('/invalide/create/{id}', InvalideCreate::class)->name('staffdesa.invalide.create');
+
+        // SDM
+        Route::get('/sdm', SdmRead::class)->name('staffdesa.sdm.read');
+        Route::get('/sdm/update/{id}', Update::class)->name('staffdesa.sdm.update');
+        Route::get('/sdm/view/{id}', View::class)->name('staffdesa.sdm.view');
 
     });
 
