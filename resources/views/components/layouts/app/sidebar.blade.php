@@ -53,7 +53,7 @@
                             {{-- Dashboard Staff Desa --}}
                             <flux:navlist.item icon="square-3-stack-3d" :href="route('staffdesa.dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                             {{-- Presence presensi --}}
-                            <flux:navlist.item icon="check" href="" rel="noopener noreferrer">{{ __('Data Presensi') }}</flux:navlist.item>
+                            <flux:navlist.item icon="check" href="{{ route('staffdesa.presensi.read') }}" rel="noopener noreferrer">{{ __('Data Presensi') }}</flux:navlist.item>
                             {{-- data smd --}}
                             <flux:navlist.item icon="users" href="{{ route('staffdesa.sdm.read') }}" rel="noopener noreferrer">{{ __('Data Card Staff') }}</flux:navlist.item>
                             {{-- Data invalide --}}

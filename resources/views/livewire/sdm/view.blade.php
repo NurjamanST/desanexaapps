@@ -1,8 +1,8 @@
 <section>
     {{-- Settings Heading --}}
     <div class="relative mb-6 w-full">
-        <flux:heading size="xl" level="1">{{ __('Tambah Data Staff') }}</flux:heading>
-        <flux:subheading size="lg" class="mb-6">{{ __('Tambahkan data staff kedalam kartu disini:') }}
+        <flux:heading size="xl" level="1">{{ __('View Data Card Staff') }}</flux:heading>
+        <flux:subheading size="lg" class="mb-6">{{ __('View data card staff disini:') }}
         </flux:subheading>
         <flux:separator variant="subtle" />
     </div>
@@ -13,11 +13,11 @@
         <flux:breadcrumbs>
             @if (auth()->user()->role === App\Enums\UserRole::Kepdesa)
                 <flux:breadcrumbs.item :href="route('kepdesa.dashboard')">Dasbor</flux:breadcrumbs.item>
-                <flux:breadcrumbs.item>Tambah Data Staff</flux:breadcrumbs.item>
+                <flux:breadcrumbs.item>View Data Card Staff</flux:breadcrumbs.item>
             @endif
             @if (auth()->user()->role === App\Enums\UserRole::Staffdesa)
                 <flux:breadcrumbs.item :href="route('staffdesa.dashboard')">Dasbor</flux:breadcrumbs.item>
-                <flux:breadcrumbs.item>Tambah Data Staff
+                <flux:breadcrumbs.item>View Data Card Staff
                 </flux:breadcrumbs.item>
             @endif
 

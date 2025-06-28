@@ -35,6 +35,7 @@ use App\Livewire\LaporanPenduduk\Read as LaporanPenduduk;
 // Invalide
 use App\Livewire\Presensi\Invalide;
 use App\Livewire\Presensi\InvalideCreate;
+use App\Livewire\Presensi\Read as PresensiRead;
 use App\Livewire\Sdm\Read as SdmRead;
 use App\Livewire\Sdm\Update;
 use App\Livewire\Sdm\View;
@@ -116,6 +117,10 @@ Route::middleware(['auth', 'verified', 'staffdesa'])
         Route::get('/sdm', SdmRead::class)->name('staffdesa.sdm.read');
         Route::get('/sdm/update/{id}', Update::class)->name('staffdesa.sdm.update');
         Route::get('/sdm/view/{id}', View::class)->name('staffdesa.sdm.view');
+
+        // Presensi
+        Route::get('/presensi/read', PresensiRead::class)
+            ->name('staffdesa.presensi.read');
 
     });
 
