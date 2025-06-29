@@ -17,7 +17,7 @@ use App\Livewire\PengajuanDokumen\Read as PengajuanDokumenRead;
 
 // Desa
 use App\Livewire\Desa\Read as DesaRead;
-
+use App\Livewire\Import\CsvDownload;
 // Staff Desa
 use App\Livewire\StaffDesa\Read as StaffDesaRead;
 
@@ -121,6 +121,10 @@ Route::middleware(['auth', 'verified', 'staffdesa'])
         // Presensi
         Route::get('/presensi/read', PresensiRead::class)
             ->name('staffdesa.presensi.read');
+
+        //CSVDownload
+        Route::get('/csvdownload', CsvDownload::class)
+            ->name('staffdesa.csvdownload');
 
     });
 

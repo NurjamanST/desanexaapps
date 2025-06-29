@@ -62,6 +62,8 @@
                             <flux:navlist.item icon="folder" :href="route('staffdesa.pengajuandokumen.read')" wire:navigate>{{ __('Pengajuan Dokumen') }}</flux:navlist.item>
                             {{-- Laporan Penduduk --}}
                             <flux:navlist.item icon="flag" :href="route('staffdesa.laporanpenduduk')" wire:navigate>{{ __('Laporan Penduduk') }}</flux:navlist.item>
+                            {{-- Download Csv --}}
+                            <flux:navlist.item icon="list-bullet" href="{{route('staffdesa.csvdownload')}}" rel="noopener noreferrer">{{ __('Download Data Presensi') }}</flux:navlist.item>
                     @endif
                     {{-- Rukun Warga --}}
                     @if (auth()->user()->role === App\Enums\UserRole::Rukunwarga)
